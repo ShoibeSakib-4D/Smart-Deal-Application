@@ -1,6 +1,7 @@
 import React, { use, useEffect, useState } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 import Swal from 'sweetalert2'
+import useAxiosSecure from '../../Hooks/useAxiosSecure'
 
 const MyBids = () => {
 
@@ -11,7 +12,20 @@ const MyBids = () => {
 
   console.log('Token:', user.accessToken)
 
+  //axios secure wiht token
+  const axiosSecure = useAxiosSecure()
+  
   useEffect(()=>{
+
+    axiosSecure.get(`/bids?email=${user?.email}`)
+    .then(data =>{
+      setMyBids(data.data)
+       setLoading(false)
+    })
+
+  },[user?.email])
+
+ /*  useEffect(()=>{
     fetch(`http://localhost:5000/bids?email=${user?.email}`,
       {headers :
          {"authorization" : `Bearer ${localStorage.getItem("user-token")}` }
@@ -23,7 +37,7 @@ const MyBids = () => {
         setLoading(false)
         console.log(data)
       })
-  }, [user?.email])
+  }, [user?.email]) */
 
 const handleDelete = _id => {
   Swal.fire({
